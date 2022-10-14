@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 import vars
 
-
+#Connect to postgres db
 user = 'postgres'
 password = os.getenv("PG_PASSWORD")
 db_name = 'postgres'
@@ -18,6 +18,16 @@ db = PostgresqlDatabase(
 			 port=port
 )
 
-connected = db.connect()
+a = db.connect()
+print(a)
 
-	
+
+
+
+#Create models
+class BaseModel(peewee.Model):
+
+	class Meta:
+		database = db
+
+class
