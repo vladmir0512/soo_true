@@ -20,4 +20,4 @@ db = PostgresqlDatabase(
 
 connected = db.connect()
 
-	
+print(connected)	
