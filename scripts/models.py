@@ -1,8 +1,6 @@
 from peewee import *
-from dotenv import load_dotenv
-
+from vars import *
 import os
-import vars
 
 #Connect to postgres db
 user = 'postgres'
@@ -11,17 +9,12 @@ db_name = 'postgres'
 host = '0.0.0.0' 
 port = 5433
 db = PostgresqlDatabase(
-			 db_name,
-			 user=user,
-			 password=password,
-                         host=host,
-			 port=port
+			db_name,
+			user=user,
+			password=password,
+            host=host,
+			port=port
 )
-
-# a = db.connect()
-# print(a)
-
-
 
 
 #Create models
@@ -32,7 +25,11 @@ class BaseModel(Model):
 
 
 class Post(BaseModel):
-	id_post = CharField(max_length=18)
+
+	class Meta:
+		db_table = 'posts'
+
+	id_post = CharField(max_length=18, unique=True)
 	post_text = CharField()
 	post_ref = CharField()
 	time_check_first = IntegerField()
@@ -40,7 +37,11 @@ class Post(BaseModel):
 
 
 class Person(BaseModel):
-	id_person = CharField() # логин (идентификатор ВК)
+
+	class Meta:
+		db_table = 'persons'
+
+	id_person = CharField(unique=True) # логин (идентификатор ВК)
 	first_name = CharField()
 	second_name = CharField()
 	city = CharField()
@@ -56,27 +57,39 @@ class Person(BaseModel):
 
 
 class Comment(BaseModel):
-	id_comment = CharField() 
-	id_post = ForeignKeyField(Post, to_field="id_post")
-	id_person = ForeignKeyField(Person, to_field="id_person")
+
+	class Meta:
+		db_table = 'comments'
+
+	id_comment = CharField(unique=True) 
+	id_post = ForeignKeyField(Post)
+	id_person = ForeignKeyField(Person)
 	comment = CharField()
 	post_date = IntegerField()
 	
 
 class Toxic_Comment(BaseModel):
-	id_comment = ForeignKeyField(Comment, to_field="id_comment")
+
+	class Meta:
+		db_table = 'toxic_comments'
+
+	id_comment = ForeignKeyField(Comment)
 	toxic = FloatField()
 	
 
 class Toxic_Post(BaseModel):
-	id_post = ForeignKeyField(Post, to_field="id_post")
-	toxic = FloatField()
+	
+	class Meta:
+		db_table = 'toxic_posts'
+
+	id_post = ForeignKeyField(Post)
+	toxic = DoubleField()
 	count = BooleanField()
 
 
-
+	 
 # class Plot(BaseModel):
-# 	plotType = hscore
+# 	plotType =HStoreField
 # 	- тип (Hscore) – json хранить все схожие id постов, Array.
 # 	- мешок слов
 # 	- вектор … цифрой

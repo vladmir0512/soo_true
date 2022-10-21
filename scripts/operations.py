@@ -1,41 +1,13 @@
-
 from models import *
 
-if __name__ == '__main__':
-    try:
-        Post.create_table()
-    except InternalError as px:
-        print(str(px))
 
+if __name__ == '__main__':   
+    models = [Post, Person, Comment, Toxic_Comment, Toxic_Post] # Позже добавить Plot
     try:
-      
-        Person.create_table()
-    except InternalError as px:
-        print(str(px))
+        db.create_tables(models)
+    except InternalError:
+        print("Tables not created!")
 
-    try:
-       
-        Comment.create_table()
-    except InternalError as px:
-        print(str(px))
 
-    try:
-       
-        Toxic_Comment.create_table()
-    except InternalError as px:
-        print(str(px))
-
-    try:
-        
-        
-        Toxic_Post.create_table()
-    except InternalError as px:
-        print(str(px))    
-    
-    '''
-    try:
-        db.connect()
-        Plot.create_table()
-    except peewee.InternalError as px:
-        print(str(px))
-    '''
+  
+  
