@@ -18,61 +18,66 @@ db = PostgresqlDatabase(
 			 port=port
 )
 
-a = db.connect()
-print(a)
+# a = db.connect()
+# print(a)
 
 
 
 
 #Create models
-class BaseModel(peewee.Model):
+class BaseModel(Model):
 
 	class Meta:
 		database = db
 
+
 class Post(BaseModel):
-	'''
-	id_post = Charfield(max_length=18)
+	id_post = CharField(max_length=18)
 	post_text = CharField()
+	post_ref = CharField()
+	time_check_first = IntegerField()
+	time_check_last =  IntegerField()
 
-	- ссылка на пост
-	- время проверки комментариев
-	- время последнего комментарияесли нет комментариев в течении 
-	(48 часов, то проверять раз в неделю, раз …)
-
-	'''
 
 class Person(BaseModel):
-	'''
-	- id
-	- информация
-	- логин (идентификатор ВК)
-	'''
+	id_person = CharField() # логин (идентификатор ВК)
+	first_name = CharField()
+	second_name = CharField()
+	city = CharField()
+	country = CharField()
+	education = CharField()
+	occupation = CharField()
+	family = CharField()
+	birthday = CharField()
+	alcohol = CharField()
+	smoke = CharField()
+	political = CharField()
+	interests = CharField()
+
 
 class Comment(BaseModel):
-	'''
-	- id_ВК_поста
-	- идентификатор ВК человека
-	- комментарий
-	- дата/время
-	'''
+	id_comment = CharField() 
+	id_post = ForeignKeyField(Post, to_field="id_post")
+	id_person = ForeignKeyField(Person, to_field="id_person")
+	comment = CharField()
+	post_date = IntegerField()
+	
 
 class Toxic_Comment(BaseModel):
-	'''
-	- id комментария
-	- токсичность
-	'''
+	id_comment = ForeignKeyField(Comment, to_field="id_comment")
+	toxic = FloatField()
+	
 
 class Toxic_Post(BaseModel):
-	'''
-	- id_поста
-	- токсичность
-	- пересчитать (флаг, Boolean)
-	'''
+	id_post = ForeignKeyField(Post, to_field="id_post")
+	toxic = FloatField()
+	count = BooleanField()
 
-class Plot(BaseModel):
-	'''
-	- тип (Hscore) – json хранить все схожие id постов, Array.
-	- мешок слов
-	- вектор … цифрой
-	'''
+
+
+# class Plot(BaseModel):
+# 	plotType = hscore
+# 	- тип (Hscore) – json хранить все схожие id постов, Array.
+# 	- мешок слов
+# 	- вектор … цифрой
+# 	'''
