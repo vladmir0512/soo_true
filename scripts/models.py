@@ -10,6 +10,8 @@ host = '0.0.0.0'
 port = 5433
 db = PostgresqlDatabase(
 			db_name,
+			autocommit=True,
+			autorollback=True,
 			user=user,
 			password=password,
             host=host,
@@ -29,11 +31,11 @@ class Post(BaseModel):
 	class Meta:
 		db_table = 'posts'
 
-	id_post = CharField(max_length=18, unique=True)
+	id_post = CharField(max_length=18, unique=True, primary_key=True)
 	post_text = CharField()
 	post_ref = CharField()
 	time_check_first = IntegerField()
-	time_check_last =  IntegerField()
+	time_last_comment = IntegerField()
 
 
 class Person(BaseModel):
@@ -41,7 +43,7 @@ class Person(BaseModel):
 	class Meta:
 		db_table = 'persons'
 
-	id_person = CharField(unique=True) # логин (идентификатор ВК)
+	id_person = CharField(unique=True, primary_key=True) # логин (идентификатор ВК)
 	first_name = CharField()
 	second_name = CharField()
 	city = CharField()
@@ -61,7 +63,7 @@ class Comment(BaseModel):
 	class Meta:
 		db_table = 'comments'
 
-	id_comment = CharField(unique=True) 
+	id_comment = CharField(unique=True, primary_key=True) 
 	id_post = ForeignKeyField(Post)
 	id_person = ForeignKeyField(Person)
 	comment = CharField()
@@ -73,7 +75,7 @@ class Toxic_Comment(BaseModel):
 	class Meta:
 		db_table = 'toxic_comments'
 
-	id_comment = ForeignKeyField(Comment)
+	id_comment = ForeignKeyField(Comment,unique=True, primary_key=True)
 	toxic = FloatField()
 	
 
@@ -82,7 +84,7 @@ class Toxic_Post(BaseModel):
 	class Meta:
 		db_table = 'toxic_posts'
 
-	id_post = ForeignKeyField(Post)
+	id_post = ForeignKeyField(Post,unique=True, primary_key=True)
 	toxic = DoubleField()
 	count = BooleanField()
 
