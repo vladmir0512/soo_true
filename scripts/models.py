@@ -36,7 +36,7 @@ class Post(BaseModel):
 	post_ref = CharField()
 	time_check_first = IntegerField()
 	time_last_comment = IntegerField()
-
+	post_date = IntegerField()
 
 class Person(BaseModel):
 
@@ -67,7 +67,7 @@ class Comment(BaseModel):
 	id_post = ForeignKeyField(Post)
 	id_person = ForeignKeyField(Person)
 	comment = CharField()
-	post_date = IntegerField()
+	post_date = ForeignKeyField(Post)
 	
 
 class Toxic_Comment(BaseModel):
