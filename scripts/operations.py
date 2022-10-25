@@ -1,12 +1,14 @@
 from models import *
 
 def create_tables(): # возвращает True или False
+
     models = [Post, Person, Comment, Toxic_Comment, Toxic_Post] # Позже добавить Plot
     try:
         db.create_tables(models)
-    except InternalError:
+    except:
         print("Tables not created!")
         return False
+
     return True
 
 def addPost(id_post, post_text, post_ref, time_check_first, time_last_comment,post_date):  # возвращает True или False
@@ -115,6 +117,15 @@ def getSamePostId(id_post): # возвращает True или False
     try:
         same = Post.select().where(Post.id_post == id_post).order_by(Post.time_last_comment.desc()).get()
         print(f"Finde the same post id {same} in \"{Post._meta.table_name}\" table")
+    except:
+        print("The id cannot be selected.")
+        return False
+    return True
+
+def getSameCommentId(id_comment): # возвращает True или False
+    try:
+        same = Comment.select().where(Comment.id_comment == id_comment).order_by(Comment.time_last_comment.desc()).get()
+        print(f"Finde the same comment id {same} in \"{Post._meta.table_name}\" table")
     except:
         print("The id cannot be selected.")
         return False

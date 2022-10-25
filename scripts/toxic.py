@@ -5,28 +5,19 @@ from time import sleep
 
 
 
-con = psycopg2.connect(
-    database="postgres",
-    user="postgres",
-    password="123",
-    host="127.0.0.1",
-    port="5433"
-)
+# con = psycopg2.connect(
+#     database="postgres",
+#     user="postgres",
+#     password="123",
+#     host="127.0.0.1",
+#     port="5433"
+# )
 
-cur = con.cursor()
-con.autocommit = True
+# cur = con.cursor()
+# con.autocommit = True
 
-print('connect!')
-try:
-    cur.execute('''CREATE TABLE TOXIC  
-            (
-                ID text,
-                TOXIC text
-            )
-            ''')
-    print('create table!')
-except:
-    print('table not created!')
+
+
 
 # def text2toxicity(text):
 #         model_checkpoint = 'cointegrated/rubert-tiny-toxicity'
