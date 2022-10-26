@@ -36,6 +36,7 @@ from time import sleep
 #         else:
 #             return '0'
 
+
 def text2toxicity(text):
         model_checkpoint = 'cointegrated/rubert-tiny-toxicity'
         tokenizer = AutoTokenizer.from_pretrained(model_checkpoint)
@@ -49,6 +50,7 @@ def text2toxicity(text):
         if isinstance(text, str):
             proba = proba[0]    
         return 1 - proba.T[0] * (1 - proba.T[-1])
+
 
 while True:
     cur.execute("SELECT ID, COMMENT from COMMENTS")
@@ -84,3 +86,4 @@ while True:
             print('Совпало, не добавляем')
             continue
     sleep(60)
+

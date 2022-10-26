@@ -34,9 +34,9 @@ class Post(BaseModel):
 	class Meta:
 		db_table = 'posts'
 
-	id_post = pw.CharField(max_length=18, unique=True, primary_key=True)
-	post_text = pw.CharField()
-	post_ref = pw.CharField()
+	id_post = pw.TextField(unique=True, primary_key=True)
+	post_text = pw.TextField()
+	post_ref = pw.TextField()
 	time_check_first = pw.IntegerField()
 	time_last_comment = pw.IntegerField()
 	post_date = pw.IntegerField()
@@ -46,19 +46,19 @@ class Person(BaseModel):
 	class Meta:
 		db_table = 'persons'
 
-	id_person = pw.CharField(unique=True, primary_key=True) # логин (идентификатор ВК)
-	first_name = pw.CharField()
-	second_name = pw.CharField()
-	city = pw.CharField()
-	country = pw.CharField()
-	education = pw.CharField()
-	occupation = pw.CharField()
-	family = pw.CharField()
-	birthday = pw.CharField()
-	alcohol = pw.CharField()
-	smoke = pw.CharField()
-	political = pw.CharField()
-	interests = pw.CharField()
+	id_person = pw.TextField(unique=True, primary_key=True) # логин (идентификатор ВК)
+	first_name = pw.TextField()
+	second_name = pw.TextField()
+	city = pw.TextField()
+	country = pw.TextField()
+	education = pw.TextField()
+	occupation = pw.TextField()
+	family = pw.TextField()
+	birthday = pw.TextField()
+	alcohol = pw.TextField()
+	smoke = pw.TextField()
+	political = pw.TextField()
+	interests = pw.TextField()
 
 
 class Comment(BaseModel):
@@ -66,10 +66,10 @@ class Comment(BaseModel):
 	class Meta:
 		db_table = 'comments'
 
-	id_comment = pw.CharField(unique=True, primary_key=True) 
+	id_comment = pw.TextField(unique=True, primary_key=True) 
 	id_post = pw.ForeignKeyField(Post)
 	id_person = pw.ForeignKeyField(Person)
-	comment = pw.CharField()
+	comment = pw.TextField()
 	post_date = pw.ForeignKeyField(Post)
 	
 

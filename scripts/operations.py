@@ -1,12 +1,13 @@
 from models import *
+import traceback
 
 def create_tables(): # возвращает True или False
 
     models = [Post, Person, Comment, Toxic_Comment, Toxic_Post] # Позже добавить Plot
     try:
         db.create_tables(models)
-    except:
-        print("Tables not created!")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
         return False
 
     return True
@@ -21,9 +22,9 @@ def addPost(id_post, post_text, post_ref, time_check_first, time_last_comment,po
                     post_date=post_date
                     ).execute()
 
-        print(f"Add post id {id_post} in the \"{Post._meta.table_name}\" table")
-    except:
-        print("The post cannot be added.")
+        print(f"Add post id {id_post} in the \"{Post._meta.table_name}\" table\n")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
         return False
     return True
 
@@ -48,8 +49,8 @@ def addPerson(id_person,first_name,second_name,city,
                     ).execute()
 
         print(f"Add person id {id_person} in the \"{Person._meta.table_name}\" table")
-    except:
-        print("The person cannot be added.")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
         return False
     return True
 
@@ -63,8 +64,8 @@ def addComment(id_comment,id_post,id_person,comment,post_date):
                     ).execute()
 
         print(f"Add comment id {id_comment} in the \"{Comment._meta.table_name}\" table")
-    except:
-        print("The post cannot be added.")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
         return False
     return True
 
@@ -76,8 +77,8 @@ def addToxicComment(id_comment,toxic):
                     ).execute()
 
         print(f"Add toxic comment id {id_comment} in the \"{Toxic_Comment._meta.table_name}\" table")
-    except:
-        print("The post cannot be added.")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
         return False
     return True
 
@@ -90,44 +91,57 @@ def addToxicPost(id_post,toxic,count):
                     ).execute()
 
         print(f"Add toxic comment id {id_post} in the \"{Toxic_Post._meta.table_name}\" table")
-    except:
-        print("The post cannot be added.")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
         return False
     return True
 
-def getOldCheckPostId():   # возвращает искомый id или False
+def getOldCheckPostId():   # возвращает искомый id или False или None
     try:
-        last = Post.select().order_by(Post.time_check_first).get()
-        print(f"Select old check post id {last} in the \"{Post._meta.table_name}\" table")
-    except:
-        print("The id cannot be selected.")
-        return False
-    return last
+        oldCheck = Post.select().order_by(Post.time_check_first).get()
+        if not oldCheck.exists():
+            print(f"The id {oldCheck} in the \"{Post._meta.table_name}\" table does not exist.")            
+            return False
+        print(f"Select old check post id {oldCheck} in the \"{Post._meta.table_name}\" table")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
+        return None
+    return oldCheck
 
-def getLastPostId():     # возвращает искомый id или False
+def getLastPostId():     # возвращает искомый id или False или None
     try:
         last = Post.select().order_by(Post.time_last_comment.desc()).get()
+        if not last.exists():
+            print(f"The id {last} in the \"{Post._meta.table_name}\" table does not exist.")            
+            return False
         print(f"Select last post id {last} in the \"{Post._meta.table_name}\" table")
-    except:
-        print("The id cannot be selected.")
-        return False
+    except Exception:
+            print('Ошибка:\n', traceback.format_exc())
+            return False
     return last
 
 def getSamePostId(id_post): # возвращает True или False
     try:
-        same = Post.select().where(Post.id_post == id_post).order_by(Post.time_last_comment.desc()).get()
-        print(f"Finde the same post id {same} in \"{Post._meta.table_name}\" table")
-    except:
-        print("The id cannot be selected.")
+        same = Post.select().where(Post.id_post == id_post).get()
+        print(f"The same post id {same} exists in \"{Post._meta.table_name}\" table")
+    except Exception as e:
+        if str(type(e)) == "<class 'models.PostDoesNotExist'>":
+            print("Same post does not exist in database.")
+        else:
+            print('Ошибка:\n', traceback.format_exc())
+                
+        
+        #print('Ошибка:\n', traceback.format_exc())
         return False
     return True
+    
 
 def getSameCommentId(id_comment): # возвращает True или False
     try:
         same = Comment.select().where(Comment.id_comment == id_comment).order_by(Comment.time_last_comment.desc()).get()
         print(f"Finde the same comment id {same} in \"{Post._meta.table_name}\" table")
-    except:
-        print("The id cannot be selected.")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
         return False
     return True
 
@@ -144,8 +158,8 @@ def changeFlag(id_post, flag):
         Toxic_Post.update({Toxic_Post.count: False}).where(Toxic_Post.id_post == id_post).execute() 
 
         print(f"Flag count is changed to {flag} in \"{Toxic_Post._meta.table_name}\" table")
-    except:
-        print("The id cannot be selected.")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
         return False
     return True
 
