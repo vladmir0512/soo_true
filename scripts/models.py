@@ -70,7 +70,7 @@ class Comment(BaseModel):
 	id_post = pw.ForeignKeyField(Post)
 	id_person = pw.ForeignKeyField(Person)
 	comment = pw.TextField()
-	post_date = pw.ForeignKeyField(Post)
+	comment_date = pw.IntegerField()
 	
 
 class Toxic_Comment(BaseModel):
