@@ -11,6 +11,16 @@ def create_tables(): # возвращает True или False
         return False
     return True
 
+def addCheckPost(id_post, time_check_first):  # возвращает True или False
+    try:
+        Post.update({ Post.time_check_first: int(f"{time_check_first}")  }).where(Post.id_post == id_post).execute() 
+        print(f"Add check post id {id_post} with time {time_check_first} in the \"{Post._meta.table_name}\" table\n")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
+
+        return False
+    return True
+
 def addPost(id_post, post_text, post_ref, time_check_first, time_last_comment,post_date):  # возвращает True или False
     try:
         Post.insert(id_post=id_post,
@@ -21,7 +31,7 @@ def addPost(id_post, post_text, post_ref, time_check_first, time_last_comment,po
                     post_date=post_date
                     ).execute()
 
-        print(f"Add post id {id_post} in the \"{Post._meta.table_name}\" table")
+        print(f"Add post id {id_post} in the \"{Post._meta.table_name}\" table\n")
     except Exception:
         print('Ошибка:\n', traceback.format_exc())
 
@@ -48,7 +58,7 @@ def addPerson(id_person,first_name,second_name,city,
                         interests=interests
                     ).execute()
 
-        print(f"Add person id {id_person} in the \"{Person._meta.table_name}\" table")
+        print(f"Add person id {id_person} in the \"{Person._meta.table_name}\" table\n")
     except:
         print("The person cannot be added.")
         return False
@@ -64,11 +74,15 @@ def addComment(id_comment,id_post,id_person,comment,comment_date):
                     ).execute()
 
         print(f"Add comment id {id_comment} in the \"{Comment._meta.table_name}\" table\n")
-    except Exception:
+    except Exception as e:
         
-        print('Ошибка:\n', traceback.format_exc())
-
-        return False
+        if str(type(e)) == "<class 'peewee.IntegrityError'>":
+            print("Same comment already exist in database.\n")
+            return False
+        else:
+            print('Ошибка:\n', traceback.format_exc())
+            return False
+   
     return True
 
 def addToxicComment(id_comment,toxic):
@@ -78,11 +92,14 @@ def addToxicComment(id_comment,toxic):
                             toxic=toxic,
                     ).execute()
 
-        print(f"Add toxic comment id {id_comment} in the \"{Toxic_Comment._meta.table_name}\" table")
-    except Exception:
-        print('Ошибка:\n', traceback.format_exc())
-        return False
-    return True
+        print(f"Add toxic comment id {id_comment} in the \"{Toxic_Comment._meta.table_name}\" table\n")
+    except Exception as e:
+        if str(type(e)) == "<class 'peewee.IntegrityError'>":
+            print("Same comment already exist in database.\n")
+            return False
+        else:
+            print('Ошибка:\n', traceback.format_exc())
+            return False
 
 def addToxicPost(id_post,toxic,count):
     try:
@@ -92,9 +109,9 @@ def addToxicPost(id_post,toxic,count):
                         count=count
                     ).execute()
 
-        print(f"Add toxic comment id {id_post} in the \"{Toxic_Post._meta.table_name}\" table")
-    except:
-        print("The post cannot be added.")
+        print(f"Add toxic comment id {id_post} in the \"{Toxic_Post._meta.table_name}\" table\n")
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
         return False
     return True
 
@@ -119,7 +136,7 @@ def getLastPostId():     # возвращает искомый id или False
 def getSamePostId(id_post): # возвращает True или False
     try:
         same = Post.select().where(Post.id_post == id_post).order_by(Post.time_last_comment.desc()).get()
-        print(f"Finde the same post id {same} in \"{Post._meta.table_name}\" table")
+        print(f"Found the same post id {same} in \"{Post._meta.table_name}\" table")
     except:
         print("The id cannot be selected.")
         return False
@@ -167,7 +184,7 @@ def toxicGetComment(): # возвращает comments или False
             comments.append(comment)
         
 
-        print(f"Getting id`s and comments from {Comment._meta.table_name} that doesn`t exist in \"{Toxic_Comment._meta.table_name}\" table")
+        print(f"Getting id`s comments and comments from {Comment._meta.table_name} that doesn`t exist in \"{Toxic_Comment._meta.table_name}\" table")
         
     except Exception as e:
         if str(type(e)) == "<class 'models.CommentDoesNotExist'>":
@@ -177,6 +194,7 @@ def toxicGetComment(): # возвращает comments или False
 
         return False
     return comments
+
 
 
 def changeFlag(id_post, flag):
