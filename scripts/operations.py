@@ -168,6 +168,15 @@ def getSamePersonId(id_person): # возвращает True или False
         return False
     return True
 
+def head(name):
+    """ Печатаем последние 5 записей в таблице испольнителей"""
+    print('#######################################################')
+    name = name
+    cur_query = name.select().limit(5)
+    for item in cur_query.dicts().execute():
+        print(f'\n{name._meta.table_name} : '[:-1], item)
+
+
 def toxicGetComment(): # возвращает comments или False
     try:
         comments = []

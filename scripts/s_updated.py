@@ -334,16 +334,18 @@ def toxic():
 
 def get_toxic_posts():
     
-    
-    id_post = orm.getLastPostId()
-    toxic = Toxic_Comment.select(Toxic_Comment.toxic).join(Comment, on=(Toxic_Comment.id_comment == Comment.id_comment))
+    try:
+    	id_post = orm.getOldCheckPostId()
+    	print(id_post)
+    	toxic = Toxic_Comment.select(Toxic_Comment.toxic).join(Comment, on=(Toxic_Comment.id_comment == Comment.id_comment)).join(Post, on=(Comment.id_post == Post.id_post))
+    	count = 0
 
-    orm.addToxicPost(id_post, toxic, count=0)
-
-
+    	orm.addToxicPost(id_post, toxic, count)
+    except Exception:
+        print('Ошибка:\n', traceback.format_exc())
 
 if __name__ == '__main__':
-    group_id = '26284064'
+    '''group_id = '26284064'
 
     post_lim = int(os.getenv("POSTLIM"))
     token = os.getenv("TOKEN")
@@ -357,9 +359,10 @@ if __name__ == '__main__':
         get_posts(group_id)
         get_comments(group_id)
         toxic()
-    
-    print(f"\nStopped {datetime.now()}")
 
+    print(f"\nStopped {datetime.now()}")
+'''
+    get_toxic_posts()
 
 
 
